@@ -3,7 +3,7 @@ require 'config.php';
 session_start();
 
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: main_menu.html');
+    header('Location: ../mainpage.html');
     exit;
 }
 

@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM users_tbl WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE users_tbl SET username = ?, email = ?, password = ? WHERE id = ?");
     if ($stmt->execute([$username, $email, $hashed_password, $user_id])) {
         $success = 'Profile updated successfully.';
     } else {

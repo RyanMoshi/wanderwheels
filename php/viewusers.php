@@ -3,11 +3,11 @@ require 'config.php';
 session_start();
 
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: main_menu.html');
+    header('Location: ../mainpage.html');
     exit;
 }
 
-$stmt = $pdo->query("SELECT * FROM users");
+$stmt = $pdo->query("SELECT * FROM users_tbl");
 $users = $stmt->fetchAll();
 ?>
 
@@ -39,8 +39,8 @@ $users = $stmt->fetchAll();
                     <td><?php echo htmlspecialchars($user['email']); ?></td>
                     <td><?php echo htmlspecialchars($user['role']); ?></td>
                     <td>
-                        <a href="edit_user.php?id=<?php echo $user['id']; ?>">Edit</a>
-                        <a href="delete_user.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="php/edituser.php?id=<?php echo $user['id']; ?>">Edit</a>
+                        <a href="php/deleteuser.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -3,11 +3,11 @@ require 'config.php';
 session_start();
 
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: main_menu.html');
+    header('Location: ../mainpage.html');
     exit;
 }
 
-$stmt = $pdo->query("SELECT trips.*, users.username FROM trips JOIN users ON trips.user_id = users.id");
+$stmt = $pdo->query("SELECT trips.*, users.username FROM trips JOIN users_tbl ON trips.user_id = users.id");
 $trips = $stmt->fetchAll();
 ?>
 
@@ -41,8 +41,8 @@ $trips = $stmt->fetchAll();
                     <td><?php echo htmlspecialchars($trip['destination']); ?></td>
                     <td><?php echo htmlspecialchars($trip['departure_time']); ?></td>
                     <td>
-                        <a href="edit_trip.php?id=<?php echo $trip['id']; ?>">Edit</a>
-                        <a href="delete_trip.php?id=<?php echo $trip['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="php/edittrip.php?id=<?php echo $trip['id']; ?>">Edit</a>
+                        <a href="php/deletetrip.php?id=<?php echo $trip['id']; ?>" onclick="return confirm('Are you sure?')">Delete</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
