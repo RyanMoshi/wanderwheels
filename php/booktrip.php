@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $destination = $_POST['destination'];
     $departure_time = $_POST['departure_time'];
 
-    $stmt = $pdo->prepare("INSERT INTO trips (user_id, origin, destination, departure_time) VALUES (?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO trips_tbl (user_id, origin, destination, departure_time) VALUES (?, ?, ?, ?)");
     if ($stmt->execute([$user_id, $origin, $destination, $departure_time])) {
         header('Location: mainpage.html');
     } else {
