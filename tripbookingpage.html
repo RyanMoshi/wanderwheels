@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book a Trip</title>
+    <link rel="stylesheet" href="css/styles2.css">
+</head>
+<body>
+    <header>
+        <div class="dropex-header-container">
+            <img src="assets/logo/logolight.png" alt="Dropex Logo" class="dropex-logo">
+            <nav>
+                <ul>
+                    <li><a href="main.html">Home</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="traffic.html">Traffic Updates</a></li>
+                    <li><a href="book.html">Book a Trip</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="logout.html">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <h2>Book a Trip</h2>
+            <form action="php/booktrip.php" method="post">
+                <label for="origin">Origin:</label>
+                <input type="text" id="origin" name="origin" required>
+                
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination" required>
+                
+                <label for="departure_time">Departure Time:</label>
+                <input type="datetime-local" id="departure_time" name="departure_time" required>
+                
+                <button type="submit">Book</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <div class="dropex-footer-container">
+            <p>© 2024 WanderWheel. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="js/welcome.js"></script>
+</body>
+</html>
