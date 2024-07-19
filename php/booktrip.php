@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $pdo->prepare("INSERT INTO trips_tbl (user_id, origin, destination, departure_time) VALUES (?, ?, ?, ?)");
     if ($stmt->execute([$user_id, $origin, $destination, $departure_time])) {
-        header('Location: mainpage.html');
+        header('Location: ../mainpage.html');
     } else {
         $error = 'Failed to book trip.';
     }
