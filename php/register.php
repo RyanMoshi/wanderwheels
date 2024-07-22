@@ -1,17 +1,17 @@
 <?php
-require_once 'config.php';
+include 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = $_POST['role'];
 
-    $stmt = $pdo->prepare("INSERT INTO users_tbl (username, email, password, role) VALUES (?, ?, ?, ?)");
-    if ($stmt->execute([$username, $email, $password, $role])) {
-        header('Location: ../login.html');
+    $sql = "INSERT INTO users (name, email, password, role) VALUES ('$name', '$email', '$password', '$role')";
+    if ($conn->query($sql) === TRUE) {
+        header("Location: login.html");
     } else {
-        echo 'Registration failed.';
+        echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
 ?>

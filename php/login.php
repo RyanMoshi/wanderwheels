@@ -1,21 +1,31 @@
 <?php
-require 'config.php';
 session_start();
+include 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $role = $_POST['role'];
 
-    $stmt = $pdo->prepare("SELECT * FROM users_tbl WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
+    $sql = "SELECT * FROM users WHERE email='$email' AND role='$role'";
+    $result = $conn->query($sql);
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role'];
-        header('Location: ../mainpage.html');
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION['role'] = $role;
+            $_SESSION['user_id'] = $row['id'];
+            if ($role == 'user') {
+                header("Location: user.html");
+            } else {
+                header("Location: driver.html");
+            }
+        } else {
+            echo "Invalid password.";
+        }
     } else {
-        echo 'Invalid email, password, or role. <a href="../login.html">Go Back to Login</a>';
+        echo "No user found with this email and role.";
     }
 }
 ?>
