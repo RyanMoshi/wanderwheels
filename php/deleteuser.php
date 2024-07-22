@@ -1,18 +1,14 @@
 <?php
-require 'config.php';
 session_start();
+include 'db.php';
 
-if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../mainpage.html');
-    exit;
-}
+$data = json_decode(file_get_contents('php://input'), true);
+$user_id = $data['user_id'];
 
-if (isset($_GET['id'])) {
-    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
-    if ($stmt->execute([$_GET['id']])) {
-        header('Location: php/viewusers.php');
-    } else {
-        echo 'Failed to delete user.';
-    }
+$sql = "DELETE FROM users WHERE id='$user_id'";
+if ($conn->query($sql) === TRUE) {
+    echo json_encode(['success' => true]);
+} else {
+    echo json_encode(['success' => false]);
 }
 ?>

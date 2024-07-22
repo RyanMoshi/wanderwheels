@@ -1,0 +1,151 @@
+/* Login and Register Pages */
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #358C9C 50%, #F68716 50%);
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 400px;
+    width: 100%;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+    margin: 20px 1; /* Added margin to reduce height */
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 100px;
+    animation: morph 2s infinite;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #358C9C;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+form input, form select, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #358C9C;
+    color: #fff;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #28737a;
+}
+
+p {
+    margin-top: 20px;
+}
+
+p a {
+    color: #358C9C;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+@keyframes morph {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+
+/* Index Page */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #358C9C 50%, #F68716 50%);
+    font-family: Arial, sans-serif;
+}
+
+.welcome-container {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 200px; /* Increased from 150px to 200px */
+    animation: morph 2s infinite;
+}
+
+.buttons-container {
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #358C9C;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn:hover {
+    background-color: #28737a;
+    transform: scale(1.05);
+}
+
+@keyframes morph {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
