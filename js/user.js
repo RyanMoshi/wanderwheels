@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load trips
     function loadTrips() {
-        fetch('php/get_trips.php')
+        fetch('php\gettrip.php')
             .then(response => response.json())
             .then(data => {
                 const tripList = document.getElementById('trip-list');
@@ -80,4 +80,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadTrips();
+
+    const bookTripForm = document.getElementById('trip-form');
+    const cancelTripForm = document.getElementById('cancel-trip-form');
+
+    if (bookTripForm) {
+        bookTripForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(bookTripForm);
+
+            fetch('php\booktrip.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert(result); // Display success or error message
+                if (result.includes("success")) {
+                    bookTripForm.reset(); // Reset form fields
+                    loadTrips(); // Optionally, reload trip list
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+
+    if (cancelTripForm) {
+        cancelTripForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(cancelTripForm);
+
+            fetch('php\canceltrip.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert(result); // Display success or error message
+                if (result.includes("success")) {
+                    cancelTripForm.reset(); // Reset form fields
+                    loadTrips(); // Optionally, reload trip list
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
 });

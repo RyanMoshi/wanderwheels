@@ -27,7 +27,15 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['role'] != 'driver') {
         </nav>
     </header>
     <main>
-        <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+    <h1>
+            <?php 
+            if (isset($_SESSION['username'])) {
+                echo 'Welcome, ' . htmlspecialchars($_SESSION['username']);
+            } else {
+                echo 'Welcome, Guest!';
+            }
+            ?>
+        </h1>
         <section id="trip-schedule">
             <h2><i class="fas fa-calendar-alt"></i> Trip Schedule</h2>
             <div id="trip-list">

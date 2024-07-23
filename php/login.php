@@ -1,31 +1,59 @@
 <?php
 session_start();
-include 'db.php';
+require_once 'db.php'; // Ensure this file contains PDO connection setup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
-    $role = $_POST['role'];
+    $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_STRING);
 
-    $sql = "SELECT * FROM users WHERE email='$email' AND role='$role'";
-    $result = $conn->query($sql);
+    // Check if required fields are set
+    if (empty($email) || empty($password)) {
+        die("All fields are required.");
+    }
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
+    // Admin credentials
+    $adminEmail = 'admin@wanderwheel.com'; // Replace with your admin email
+    $adminPassword = 'admin@2024'; // Replace with your admin password
+
+    // Check for admin login
+    if ($email === $adminEmail && $password === $adminPassword) {
+        $_SESSION['loggedin'] = true;
+        $_SESSION['role'] = 'admin';
+        $_SESSION['user_id'] = 0; // You can set a dummy ID or manage it as needed
+        $_SESSION['username'] = 'Admin'; // Set a username for the admin
+        header("Location: ../admin.php"); // Redirect to the admin dashboard
+        exit();
+    }
+
+    // For regular user or driver login
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND role = :role");
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':role', $role);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
             $_SESSION['loggedin'] = true;
             $_SESSION['role'] = $role;
-            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username']; // Set the username session variable
+
             if ($role == 'user') {
-                header("Location: user.html");
+                header("Location: ../user.php");
+            } elseif ($role == 'driver') {
+                header("Location: ../driver.php");
             } else {
-                header("Location: driver.html");
+                die("Invalid role.");
             }
+            exit();
         } else {
-            echo "Invalid password.";
+            echo "Invalid email or password.";
         }
-    } else {
-        echo "No user found with this email and role.";
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
 ?>
