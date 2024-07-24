@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const logo = document.querySelector('.logo');
 
+    // Animation for the logo
     function animateLogo() {
         logo.style.position = 'relative';
         let position = 0;
@@ -22,18 +23,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
     animateLogo();
 
-    // Initialize map
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -1.286389, lng: 36.817223},
-            zoom: 12
-        });
-
-        var trafficLayer = new google.maps.TrafficLayer();
-        trafficLayer.setMap(map);
+    // Load bookings
+    function loadBookings() {
+        fetch('php/get_bookings.php')
+            .then(response => response.json())
+            .then(data => {
+                const bookingList = document.getElementById('booking-list');
+                bookingList.innerHTML = '';
+                if (data.length === 0) {
+                    bookingList.innerHTML = '<p>No bookings found.</p>';
+                } else {
+                    const table = document.createElement('table');
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User ID</th>
+                                <th>Driver ID</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(booking => `
+                                <tr>
+                                    <td>${booking.id}</td>
+                                    <td>${booking.user_id}</td>
+                                    <td>${booking.driver_id}</td>
+                                    <td>${booking.origin}</td>
+                                    <td>${booking.destination}</td>
+                                    <td>${booking.date}</td>
+                                    <td>${booking.status}</td>
+                                    <td>
+                                        <button onclick="authorizeBooking(${booking.id})">Authorize</button>
+                                        <button onclick="rescheduleBooking(${booking.id})">Reschedule</button>
+                                        <button onclick="deleteBooking(${booking.id})">Delete</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    `;
+                    bookingList.appendChild(table);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching bookings:', error);
+                document.getElementById('booking-list').innerHTML = '<p>Error loading bookings. Please try again later.</p>';
+            });
     }
 
-    initMap();
+    loadBookings();
 
     // Load users
     function loadUsers() {
@@ -42,21 +84,50 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const userList = document.getElementById('user-list');
                 userList.innerHTML = '';
-                data.forEach(user => {
-                    const userItem = document.createElement('div');
-                    userItem.className = 'user-item';
-                    userItem.innerHTML = `
-                        <p>User ID: ${user.id}</p>
-                        <p>Name: ${user.name}</p>
-                        <p>Email: ${user.email}</p>
-                        <button onclick="deleteUser(${user.id})">Delete User</button>
+                if (data.length === 0) {
+                    userList.innerHTML = '<p>No users found.</p>';
+                } else {
+                    const table = document.createElement('table');
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(user => `
+                                <tr>
+                                    <td>${user.id}</td>
+                                    <td>${user.name}</td>
+                                    <td>${user.email}</td>
+                                    <td>${user.role}</td>
+                                    <td><button onclick="deleteUser(${user.id})">Delete User</button></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
                     `;
-                    userList.appendChild(userItem);
-                });
+                    userList.appendChild(table);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+                document.getElementById('user-list').innerHTML = '<p>Error loading users. Please try again later.</p>';
             });
     }
 
-    loadUsers();
+    // Show and hide user list
+    document.getElementById('show-users-btn').addEventListener('click', function() {
+        document.getElementById('user-list-container').style.display = 'block';
+        loadUsers();
+    });
+
+    document.getElementById('hide-users-btn').addEventListener('click', function() {
+        document.getElementById('user-list-container').style.display = 'none';
+    });
 
     // Load trips
     function loadTrips() {
@@ -65,17 +136,44 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const tripList = document.getElementById('trip-list');
                 tripList.innerHTML = '';
-                data.forEach(trip => {
-                    const tripItem = document.createElement('div');
-                    tripItem.className = 'trip-item';
-                    tripItem.innerHTML = `
-                        <p>Trip ID: ${trip.id}</p>
-                        <p>Origin: ${trip.origin}</p>
-                        <p>Destination: ${trip.destination}</p>
-                        <p>Date: ${trip.date}</p>
+                if (data.length === 0) {
+                    tripList.innerHTML = '<p>No trips found.</p>';
+                } else {
+                    const table = document.createElement('table');
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User ID</th>
+                                <th>Driver ID</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(trip => `
+                                <tr>
+                                    <td>${trip.id}</td>
+                                    <td>${trip.user_id}</td>
+                                    <td>${trip.driver_id}</td>
+                                    <td>${trip.origin}</td>
+                                    <td>${trip.destination}</td>
+                                    <td>${trip.date}</td>
+                                    <td>${trip.status}</td>
+                                    <td><button onclick="authorizeTrip(${trip.id})">Authorize</button></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
                     `;
-                    tripList.appendChild(tripItem);
-                });
+                    tripList.appendChild(table);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching trips:', error);
+                document.getElementById('trip-list').innerHTML = '<p>Error loading trips. Please try again later.</p>';
             });
     }
 
@@ -100,10 +198,70 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Authorize trip
-    document.getElementById('authorize-trip-form').addEventListener('submit', function(event) {
+    // Authorize booking
+    window.authorizeBooking = function(bookingId) {
+        fetch('php/authorize_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ booking_id: bookingId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadBookings();
+            } else {
+                alert('Failed to authorize booking.');
+            }
+        });
+    };
+
+    // Reschedule booking
+    document.getElementById('reschedule-booking-form').addEventListener('submit', function(event) {
         event.preventDefault();
-        const tripId = document.getElementById('trip-id').value;
+        const bookingId = document.getElementById('booking-id-reschedule').value;
+        const newDate = document.getElementById('new-date-reschedule').value;
+        fetch('php/reschedule_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ booking_id: bookingId, new_date: newDate })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadBookings();
+            } else {
+                alert('Failed to reschedule booking.');
+            }
+        });
+    });
+
+    // Delete booking
+    document.getElementById('delete-booking-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const bookingId = document.getElementById('booking-id-delete').value;
+        fetch('php/delete_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ booking_id: bookingId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadBookings();
+            } else {
+                alert('Failed to delete booking.');
+            }
+        });
+    });
+
+    // Authorize trip
+    window.authorizeTrip = function(tripId) {
         fetch('php/authorize_trip.php', {
             method: 'POST',
             headers: {
@@ -119,48 +277,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Failed to authorize trip.');
             }
         });
-    });
-
-    // Reschedule trip
-    document.getElementById('reschedule-trip-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const tripId = document.getElementById('trip-id-reschedule').value;
-        const newDate = document.getElementById('new-date').value;
-        fetch('php/reschedule_trip.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ trip_id: tripId, new_date: newDate })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                loadTrips();
-            } else {
-                alert('Failed to reschedule trip.');
-            }
-        });
-    });
-
-    // Delete trip
-    document.getElementById('delete-trip-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const tripId = document.getElementById('trip-id-delete').value;
-        fetch('php/delete_trip.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ trip_id: tripId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                loadTrips();
-            } else {
-                alert('Failed to delete trip.');
-            }
-        });
-    });
+    };
 });

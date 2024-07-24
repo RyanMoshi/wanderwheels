@@ -22,45 +22,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     animateLogo();
 
-    // Initialize map
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -1.286389, lng: 36.817223},
-            zoom: 12
-        });
+    function showTrafficUpdate() {
+        const location = document.getElementById('location').value;
+        const trafficInfoDiv = document.getElementById('traffic-info');
+        trafficInfoDiv.innerHTML = ''; // Clear previous traffic info
 
-        var directionsService = new google.maps.DirectionsService();
-        var directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(map);
+        if (!location) {
+            trafficInfoDiv.innerHTML = 'Please enter a location.';
+            return;
+        }
 
-        document.getElementById('trip-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            calculateAndDisplayRoute(directionsService, directionsRenderer);
-        });
+        // Use template literals and correct URL parameter
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location)}&travelmode=driving&layer=traffic`;
+
+        trafficInfoDiv.innerHTML = `
+            <p><strong>Traffic information for ${location}:</strong></p>
+            <p><a href="${mapsUrl}" target="_blank">View Traffic Updates on Google Maps</a></p>
+        `;
     }
 
-    function calculateAndDisplayRoute(directionsService, directionsRenderer) {
-        var origin = document.getElementById('origin').value;
-        var destination = document.getElementById('destination').value;
-
-        directionsService.route({
-            origin: origin,
-            destination: destination,
-            travelMode: 'DRIVING'
-        }, function(response, status) {
-            if (status === 'OK') {
-                directionsRenderer.setDirections(response);
-            } else {
-                window.alert('Directions request failed due to ' + status);
-            }
-        });
-    }
-
-    initMap();
-
-    // Load trips
     function loadTrips() {
-        fetch('php/get_trips.php')
+        fetch('php/gettrip.php')
             .then(response => response.json())
             .then(data => {
                 const tripList = document.getElementById('trip-list');
@@ -76,8 +58,76 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     tripList.appendChild(tripItem);
                 });
+            })
+            .catch(error => {
+                console.error('Error loading trips:', error);
             });
     }
 
     loadTrips();
+
+    const bookTripForm = document.getElementById('trip-form');
+    const cancelTripForm = document.getElementById('cancel-trip-form');
+    const trafficForm = document.getElementById('traffic-form');
+
+    if (bookTripForm) {
+        bookTripForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(bookTripForm);
+
+            fetch('php/booktrip.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim().toLowerCase() === "success") {
+                    alert("Booking confirmed!"); // Display confirmation message
+                    bookTripForm.reset(); // Reset form fields
+                    loadTrips(); // Reload trip list
+                } else {
+                    alert("Booking failed: " + result); // Display error message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while booking the trip.");
+            });
+        });
+    }
+
+    if (cancelTripForm) {
+        cancelTripForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(cancelTripForm);
+
+            fetch('php/canceltrip.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim().toLowerCase() === "success") {
+                    alert("Trip cancelled successfully!"); // Display confirmation message
+                    cancelTripForm.reset(); // Reset form fields
+                    loadTrips(); // Reload trip list
+                } else {
+                    alert("Cancellation failed: " + result); // Display error message
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while cancelling the trip.");
+            });
+        });
+    }
+
+    if (trafficForm) {
+        trafficForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            showTrafficUpdate(); // Show traffic update based on entered location
+        });
+    }
 });
