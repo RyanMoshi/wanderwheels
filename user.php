@@ -25,10 +25,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['role'] != 'user') {
         </nav>
     </header>
     <main>
-<<<<<<< HEAD
-        <!-- PHP to show the username -->
-=======
->>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
         <h1>
             <?php 
             if (isset($_SESSION['username'])) {
@@ -38,10 +34,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['role'] != 'user') {
             }
             ?>
         </h1>
-<<<<<<< HEAD
-
-=======
->>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
         <section id="book-trip">
             <h2><i class="fas fa-car"></i> Book Trip</h2>
             <form id="trip-form" action="php/booktrip.php" method="POST">
