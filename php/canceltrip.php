@@ -1,11 +1,26 @@
 <?php
 session_start();
+<<<<<<< HEAD
 include 'db.php'; // Ensure this file correctly sets up the $conn variable
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_SESSION['user_id'])) {
         echo "Error: User not logged in.";
         exit();
+=======
+require_once 'db.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $trip_id = $_POST['trip_id'];
+    $user_id = $_SESSION['user_id'];
+
+    $sql = "DELETE FROM bookings WHERE id = :trip_id AND user_id = :user_id";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt->execute(['trip_id' => $trip_id, 'user_id' => $user_id])) {
+        echo "Trip canceled successfully!";
+    } else {
+        echo "Error: Unable to cancel trip.";
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
     }
 
     $trip_id = $_POST['trip_id'];

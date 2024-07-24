@@ -1,11 +1,15 @@
 <?php
 session_start();
+<<<<<<< HEAD
 require_once 'php/db.php'; // Ensure this file contains mysqli connection setup
 
+=======
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
 if (!isset($_SESSION['loggedin']) || $_SESSION['role'] != 'admin') {
     header('Location: login.html');
     exit();
 }
+<<<<<<< HEAD
 
 $users = [];
 $trips = [];
@@ -75,6 +79,8 @@ if (isset($_POST['reschedule_trip'])) {
         $tripMessage = "Invalid date format. Please use YYYY-MM-DDTHH:MM format.";
     }
 }
+=======
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -85,6 +91,10 @@ if (isset($_POST['reschedule_trip'])) {
     <title>Admin Dashboard - WanderWheels</title>
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<<<<<<< HEAD
+=======
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
 </head>
 
 <body>
@@ -98,6 +108,7 @@ if (isset($_POST['reschedule_trip'])) {
     </header>
     <main>
         <h1>Welcome, Admin!</h1>
+<<<<<<< HEAD
         
         <section id="view-users">
             <h2><i class="fas fa-users"></i> View Users</h2>
@@ -188,10 +199,33 @@ if (isset($_POST['reschedule_trip'])) {
                 <button type="submit" name="authorize_trip" class="btn">Authorize Trip</button>
             </form>
             <form id="reschedule-trip-form" method="POST" action="">
+=======
+        <section id="view-users">
+            <h2><i class="fas fa-users"></i> View Users</h2>
+            <div id="user-list">
+                <!-- User details will be dynamically loaded here -->
+            </div>
+        </section>
+        <section id="view-trips">
+            <h2><i class="fas fa-road"></i> View Trips</h2>
+            <div id="trip-list">
+                <!-- Trip details will be dynamically loaded here -->
+            </div>
+        </section>
+        <section id="manage-trips">
+            <h2><i class="fas fa-cogs"></i> Manage Trips</h2>
+            <form id="authorize-trip-form">
+                <label for="trip-id">Trip ID:</label>
+                <input type="text" id="trip-id" name="trip_id" required>
+                <button type="submit" class="btn">Authorize Trip</button>
+            </form>
+            <form id="reschedule-trip-form">
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
                 <label for="trip-id-reschedule">Trip ID:</label>
                 <input type="text" id="trip-id-reschedule" name="trip_id" required>
                 <label for="new-date">New Date:</label>
                 <input type="datetime-local" id="new-date" name="new_date" required>
+<<<<<<< HEAD
                 <button type="submit" name="reschedule_trip" class="btn">Reschedule Trip</button>
             </form>
             <form id="delete-trip-form" method="POST" action="">
@@ -201,6 +235,20 @@ if (isset($_POST['reschedule_trip'])) {
             </form>
         </section>
 
+=======
+                <button type="submit" class="btn">Reschedule Trip</button>
+            </form>
+            <form id="delete-trip-form">
+                <label for="trip-id-delete">Trip ID:</label>
+                <input type="text" id="trip-id-delete" name="trip_id" required>
+                <button type="submit" class="btn">Delete Trip</button>
+            </form>
+        </section>
+        <section id="traffic">
+            <h2><i class="fas fa-traffic-light"></i> Traffic Information</h2>
+            <div id="map"></div>
+        </section>
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
     </main>
     <script src="js/admin.js"></script>
 </body>

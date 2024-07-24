@@ -1,11 +1,28 @@
 <?php
 session_start();
+<<<<<<< HEAD
 require_once 'db.php'; // Ensure this file contains MySQLi connection setup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ensure that user_id is set in the session
     if (!isset($_SESSION['user_id'])) {
         die("User not logged in.");
+=======
+require_once 'db.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_id = $_SESSION['user_id'];
+    $origin = $_POST['origin'];
+    $destination = $_POST['destination'];
+    $date = $_POST['date'];
+
+    $sql = "INSERT INTO bookings (user_id, origin, destination, date) VALUES (:user_id, :origin, :destination, :date)";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt->execute(['user_id' => $user_id, 'origin' => $origin, 'destination' => $destination, 'date' => $date])) {
+        echo "Trip booked successfully!";
+    } else {
+        echo "Error: Unable to book trip.";
+>>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
     }
     $user_id = $_SESSION['user_id'];
 
