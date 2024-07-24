@@ -1,9 +1,5 @@
 <?php
-<<<<<<< HEAD
-require_once 'db.php'; // Ensure this file contains MySQLi connection setup
-=======
 require_once 'db.php'; // Ensure this file contains PDO connection setup
->>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
 
 function registerUser($conn, $name, $email, $password, $confirm_password, $role) {
     // Sanitize and validate input
@@ -62,20 +58,6 @@ function registerUser($conn, $name, $email, $password, $confirm_password, $role)
 
 // Example usage
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-<<<<<<< HEAD
-    // Ensure $conn is properly initialized in db.php
-    if (!isset($conn)) {
-        die("Database connection failed.");
-    }
-
-    $name = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $role = $_POST['role'];
-
-    registerUser($conn, $name, $email, $password, $confirm_password, $role);
-=======
     // Sanitize and validate input
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING); // Updated from 'name' to 'username'
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -118,6 +100,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
->>>>>>> 0a0202ec7c37893e352786ef9a25d3cf2b09d8ac
 }
 ?>
